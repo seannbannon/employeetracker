@@ -339,31 +339,38 @@ function employeeArray() {
     console.table(res);
     console.log("employeeArray To Update!\n")
 
-    roleArray(employeeChoices);
+    promptEmployeeRole(employeeChoices, roleChoices)
+
+    // roleArray(employeeChoices);
   });
 }
+let roleChoices = connection.query(`SELECT id, title, salary 
+FROM role`)
 
-function roleArray(employeeChoices) {
-  console.log("Updating an role");
+// console.log(roleChoices)
 
-  var query =
-    `SELECT r.id, r.title, r.salary 
-  FROM role r`
-  let roleChoices;
 
-  connection.query(query, function (err, res) {
-    if (err) throw err;
+// function roleArray(employeeChoices) {
+//   console.log("Updating an role");
 
-    roleChoices = res.map(({ id, title, salary }) => ({
-      value: id, title: `${title}`, salary: `${salary}`      
-    }));
+//   var query =
+//     `SELECT id, title, salary 
+//   FROM role`
 
-    console.table(res);
-    console.log("roleArray to Update!\n")
+  // connection.query(query, function (err, res) {
+  //   if (err) throw err;
 
-    promptEmployeeRole(employeeChoices, roleChoices);
-  });
-}
+  //   roleChoices = res.map(({ id, title, salary }) => ({
+  //     value: id, title: `${title}`, salary: `${salary}`      
+  //   }));
+
+  //   console.table(res);
+  //   console.log("roleArray to Update!\n")
+
+//     promptEmployeeRole(employeeChoices, roleChoices);
+//   });
+// }
+
 
 function promptEmployeeRole(employeeChoices, roleChoices) {
 
@@ -379,7 +386,9 @@ function promptEmployeeRole(employeeChoices, roleChoices) {
         type: "list",
         name: "roleId",
         message: "Which role do you want to update?",
-        choices: roleChoices
+        choices: roleChoices = roleChoices.map(({ id, title, salary }) => ({
+          value: id, title: `${title}`, salary: `${salary}`      
+        }))
       },
     ])
     .then(function (answer) {
@@ -425,14 +434,14 @@ function addRole() {
       value: id, name: `${id} ${name}`
     }));
 
-    console.table(res);
+    // console.table(res);
     console.log("Department array!");
 
-    promptAddRole(departmentChoices);
+    promptAddRole();
   });
 }
 
-function promptAddRole(departmentChoices) {
+function promptAddRole() {
 
   inquirer
     .prompt([
